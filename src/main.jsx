@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 8: add canvas mouse and touch event listeners
+// Step 9: handle window resizing and canvas scaling dynamically
