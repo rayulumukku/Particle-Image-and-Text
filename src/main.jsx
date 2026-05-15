@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 1: first commit
+// Step 2: set up canvas elements and app architecture
