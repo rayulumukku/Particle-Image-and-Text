@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 3: create basic particle class and physics updates
+// Step 4: generate 3d coordinates using fibonacci sphere formula
