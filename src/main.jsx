@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 2: set up canvas elements and app architecture
+// Step 3: create basic particle class and physics updates
