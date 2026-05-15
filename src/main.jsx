@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 7: implement transparent canvas clearing for motion trails
+// Step 8: add canvas mouse and touch event listeners
