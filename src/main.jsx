@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 9: handle window resizing and canvas scaling dynamically
+// Step 10: implement spring physics coordinates transition
