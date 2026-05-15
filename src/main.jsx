@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 6: add hsl gradient colors across particle grid
+// Step 7: implement transparent canvas clearing for motion trails
