@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 5: add 3d perspective projection to 2d screen
+// Step 6: add hsl gradient colors across particle grid
