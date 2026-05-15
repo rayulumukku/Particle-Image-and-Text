@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 4: generate 3d coordinates using fibonacci sphere formula
+// Step 5: add 3d perspective projection to 2d screen
