@@ -1,0 +1,274 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #05050f;
+    overflow: hidden;
+    height: 100vh;
+    height: 100dvh;
+    width: 100vw;
+    touch-action: none;
+    transition: background 0.3s ease;
+}
+
+body.light-theme {
+    background: #fafafc;
+}
+
+#pw-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+#pw-ui {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+    width: calc(100vw - 32px);
+    max-width: 480px;
+}
+
+/* Theme Toggle Button */
+#pw-theme-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 0.5px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    padding: 9px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: system-ui, sans-serif;
+    letter-spacing: 0.03em;
+    z-index: 20;
+    user-select: none;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+#pw-theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.light-theme #pw-theme-toggle {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.18);
+    color: #05050f;
+}
+
+.light-theme #pw-theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.10);
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Voice Button */
+#pw-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 0.5px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    padding: 11px 28px;
+    border-radius: 50px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: system-ui, sans-serif;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    user-select: none;
+}
+
+#pw-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.light-theme #pw-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.18);
+    color: #05050f;
+}
+
+.light-theme #pw-btn:hover {
+    background: rgba(0, 0, 0, 0.10);
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+#pw-btn.listening {
+    background: rgba(220, 50, 50, 0.25);
+    border-color: rgba(220, 80, 80, 0.7);
+    animation: pw-pulse 1s ease-in-out infinite;
+}
+
+.light-theme #pw-btn.listening {
+    background: rgba(220, 50, 50, 0.15);
+    border-color: rgba(220, 50, 50, 0.5);
+}
+
+@keyframes pw-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 50, 50, 0.35);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(220, 50, 50, 0);
+    }
+}
+
+#pw-status {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 13px;
+    font-family: system-ui, sans-serif;
+    text-align: center;
+    transition: color 0.3s;
+}
+
+.light-theme #pw-status {
+    color: rgba(5, 5, 15, 0.6);
+}
+
+#pw-tip {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 11px;
+    font-family: system-ui, sans-serif;
+    opacity: 0;
+    transition: opacity 0.5s, color 0.3s;
+    text-align: center;
+}
+
+.light-theme #pw-tip {
+    color: rgba(5, 5, 15, 0.4);
+}
+
+#pw-input-zone {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+
+#pw-input {
+    background: rgba(255, 255, 255, 0.07);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 9px 16px;
+    border-radius: 50px;
+    font-size: 16px;
+    outline: none;
+    width: 220px;
+    font-family: system-ui, sans-serif;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+#pw-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+#pw-input:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.light-theme #pw-input {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #05050f;
+}
+
+.light-theme #pw-input::placeholder {
+    color: rgba(5, 5, 15, 0.4);
+}
+
+.light-theme #pw-input:focus {
+    border-color: rgba(0, 0, 0, 0.35);
+}
+
+#pw-go {
+    background: rgba(255, 255, 255, 0.08);
+    border: 0.5px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    padding: 9px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: system-ui, sans-serif;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+#pw-go:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.light-theme #pw-go {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.18);
+    color: #05050f;
+}
+
+.light-theme #pw-go:hover {
+    background: rgba(0, 0, 0, 0.10);
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
+#pw-hint {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 11px;
+    font-family: system-ui, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s;
+}
+
+.light-theme #pw-hint {
+    color: rgba(5, 5, 15, 0.35);
+}
+
+#pw-transcript {
+    margin-bottom: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    max-width: 400px;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    min-height: 1.5em;
+    line-height: 1.4;
+    transition: color 0.3s;
+}
+
+.light-theme #pw-transcript {
+    color: rgba(5, 5, 15, 0.85);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 480px) {
+    #pw-ui {
+        bottom: 24px;
+    }
+    #pw-input {
+        width: 180px;
+    }
+    #pw-transcript {
+        font-size: 15px;
+    }
+    #pw-hint {
+        display: none;
+    }
+}
