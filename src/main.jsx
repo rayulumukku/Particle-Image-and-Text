@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 13: implement text characters pixel coordinate sampling
+// Step 14: add staggered particle text morphing delay
