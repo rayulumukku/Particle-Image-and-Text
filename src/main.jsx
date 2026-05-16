@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 16: integrate speech recognition api for voice commands
+// Step 17: add voice input word translation and morphing
