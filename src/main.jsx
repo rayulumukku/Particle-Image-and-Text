@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 15: add bottom input box styling and reset options
+// Step 16: integrate speech recognition api for voice commands
