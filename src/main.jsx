@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 14: add staggered particle text morphing delay
+// Step 15: add bottom input box styling and reset options
