@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 12: create offscreen canvas for rendering target text
+// Step 13: implement text characters pixel coordinate sampling
