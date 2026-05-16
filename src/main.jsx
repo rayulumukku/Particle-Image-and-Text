@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 10: implement spring physics coordinates transition
+// Step 11: add mouse hover particle repulsion zone
