@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 17: add voice input word translation and morphing
+// Step 18: add double-click listener to reset back to sphere
