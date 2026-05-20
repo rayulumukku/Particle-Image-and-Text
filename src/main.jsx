@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 18: add double-click listener to reset back to sphere
+// Step 19: add image file input and reader component
