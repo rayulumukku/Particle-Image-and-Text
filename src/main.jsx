@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 20: implement offscreen image scaling and centering
+// Step 21: add image pixel color and coordinates sampler
