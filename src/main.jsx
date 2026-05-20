@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 19: add image file input and reader component
+// Step 20: implement offscreen image scaling and centering
