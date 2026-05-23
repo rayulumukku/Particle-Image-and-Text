@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 21: add image pixel color and coordinates sampler
+// Step 22: implement corner-based solid background color filtering
