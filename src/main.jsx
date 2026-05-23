@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 23: add formImage particle morphing into custom images
+// Step 24: fix reference error bugs in coordinate offsets
