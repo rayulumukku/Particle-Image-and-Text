@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 25: hide default browser cursor globally over canvas
+// Step 26: add custom golden particle cursor trail
