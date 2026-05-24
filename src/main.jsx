@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 27: change stardust to shining chime sparkles
+// Step 28: increase stardust lifetime and flow count
