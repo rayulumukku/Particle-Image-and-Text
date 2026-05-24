@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 26: add custom golden particle cursor trail
+// Step 27: change stardust to shining chime sparkles
