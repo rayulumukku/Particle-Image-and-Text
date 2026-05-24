@@ -9,4 +9,4 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Step 24: fix reference error bugs in coordinate offsets
+// Step 25: hide default browser cursor globally over canvas
