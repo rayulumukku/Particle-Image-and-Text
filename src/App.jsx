@@ -617,7 +617,7 @@ function App() {
     };
 
     let lastTap = 0;
-    const onTouchTapReset = (e) => {
+    const onTouchTapReset = () => {
       const now = Date.now();
       if (now - lastTap < 300) {
         resetToSphere();
