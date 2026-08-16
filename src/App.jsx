@@ -7,10 +7,6 @@ function App() {
   const recognitionRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Theme states
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const isDarkModeRef = useRef(isDarkMode);
-
   // React state for UI
   const [inputValue, setInputValue] = useState('');
   const [transcript, setTranscript] = useState('');
@@ -21,13 +17,8 @@ function App() {
 
   // Sync theme ref
   useEffect(() => {
-    isDarkModeRef.current = isDarkMode;
-    if (isDarkMode) {
-      document.body.classList.remove('light-theme');
-    } else {
-      document.body.classList.add('light-theme');
-    }
-  }, [isDarkMode]);
+    document.body.classList.remove('light-theme');
+  }, []);
 
   // Detect mobile device
   const isMobile = typeof window !== 'undefined' && 
@@ -133,9 +124,15 @@ function App() {
     let t = 0;
     let rotY = 0;
 
-    const REPEL_RADIUS = isMobile ? 130 : 100;
+    const REPEL_RADIUS = isMobile ? 80 : 60;
     const REPEL_FORCE = 8;
     const PHI = Math.PI * (1 + Math.sqrt(5));
+
+    // Golden cursor trail pool
+    const TRAIL_MAX = 1200;
+    const trail = [];
+    let lastMouseX = -9999;
+    let lastMouseY = -9999;
     const FOV = 550;
     const CAMERA_Z = 600;
 
@@ -333,10 +330,10 @@ function App() {
         return [data[idx], data[idx + 1], data[idx + 2], data[idx + 3]];
       };
 
-      const corner1 = getPixelColor(gridStartX, gridStartY);
-      const corner2 = getPixelColor(gridStartX + Math.floor(targetW - 1), gridStartY);
-      const corner3 = getPixelColor(gridStartX, gridStartY + Math.floor(targetH - 1));
-      const corner4 = getPixelColor(gridStartX + Math.floor(targetW - 1), gridStartY + Math.floor(targetH - 1));
+      const corner1 = getPixelColor(Math.floor(startX), Math.floor(startY));
+      const corner2 = getPixelColor(Math.floor(startX + targetW - 1), Math.floor(startY));
+      const corner3 = getPixelColor(Math.floor(startX), Math.floor(startY + targetH - 1));
+      const corner4 = getPixelColor(Math.floor(startX + targetW - 1), Math.floor(startY + targetH - 1));
 
       const colorDist = (colA, colB) => {
         return Math.sqrt((colA[0] - colB[0]) ** 2 + (colA[1] - colB[1]) ** 2 + (colA[2] - colB[2]) ** 2);
@@ -359,8 +356,8 @@ function App() {
 
       for (let y = 0; y < targetH; y += step) {
         for (let x = 0; x < targetW; x += step) {
-          const pxX = gridStartX + x;
-          const pxY = gridStartY + y;
+          const pxX = Math.floor(startX + x);
+          const pxY = Math.floor(startY + y);
           if (pxX >= W || pxY >= H) continue;
 
           const idx = (pxY * W + pxX) * 4;
@@ -491,25 +488,17 @@ function App() {
         let targetR, targetG, targetB, targetA;
         if (appState === 0) {
           const h = (hue[i] + t * 25) % 360;
-          // Use higher saturation (95% vs 80%) and lower lightness (38% vs 70%) in light mode
-          const sat = isDarkModeRef.current ? 0.8 : 0.95;
-          const lightness = isDarkModeRef.current ? 0.7 : 0.38;
+          const sat = 0.8;
+          const lightness = 0.7;
           const rgb = hslToRgb(h / 360, sat, lightness);
           targetR = rgb[0];
           targetG = rgb[1];
           targetB = rgb[2];
-          targetA = isDarkModeRef.current ? 0.5 : 0.85;
+          targetA = 0.5;
         } else if (colorMode === 'text') {
-          // Cyan in Dark Mode, Indigo in Light Mode
-          if (isDarkModeRef.current) {
-            targetR = 170;
-            targetG = 230;
-            targetB = 250;
-          } else {
-            targetR = 67;
-            targetG = 56;
-            targetB = 202;
-          }
+          targetR = 170;
+          targetG = 230;
+          targetB = 250;
           targetA = 1.0;
         } else {
           // Custom RGB image colors
@@ -529,9 +518,7 @@ function App() {
     /* ─── Render ────────────────────────────────────────────────────── */
     function draw() {
       // Background clear color trail
-      ctx.fillStyle = isDarkModeRef.current 
-        ? 'rgba(5,5,15,0.22)' 
-        : 'rgba(250,250,252,0.22)';
+      ctx.fillStyle = 'rgba(5,5,15,0.22)';
       ctx.fillRect(0, 0, W, H);
 
       for (let i = 0; i < N; i++) {
@@ -543,8 +530,7 @@ function App() {
         const sy = py[i] * scale + CY;
 
         const spd = Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i] + vz[i] * vz[i]);
-        // Bolder particle size in light mode for better legibility
-        const sizeMultiplier = isDarkModeRef.current ? 1.0 : 1.35;
+        const sizeMultiplier = 1.0;
         let size = (appState >= 1 ? 0.45 : 0.4 + spd * 0.12) * scale * sizeMultiplier;
 
         ctx.beginPath();
@@ -553,15 +539,60 @@ function App() {
         ctx.fill();
       }
 
-      if (mouseX > -9000) {
-        const r = REPEL_RADIUS;
-        const grd = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, r);
-        grd.addColorStop(0, isDarkModeRef.current ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)');
-        grd.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.beginPath();
-        ctx.arc(mouseX, mouseY, r, 0, 6.2832);
-        ctx.fillStyle = grd;
-        ctx.fill();
+      // Update & draw golden chime sparkles
+      for (let i = trail.length - 1; i >= 0; i--) {
+        const p = trail[i];
+        p.life--;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.985;
+        p.vy *= 0.985;
+
+        if (p.life <= 0) { trail.splice(i, 1); continue; }
+
+        const lifeRatio = p.life / p.maxLife;
+        // Flash in fast, fade out slowly
+        const alpha = lifeRatio > 0.8
+          ? ((1 - lifeRatio) / 0.2)
+          : lifeRatio;
+
+        // Twinkle effect (shimmer)
+        const shimmer = 0.35 + 0.65 * Math.sin(t * 35 + p.phase);
+        const curAlpha = alpha * shimmer;
+        const rad = p.size * (0.35 + 0.65 * lifeRatio);
+
+        if (p.isStar) {
+          // Draw a glowing golden diamond/star (pinched corners star)
+          ctx.fillStyle = `hsla(${p.hue}, 100%, 75%, ${curAlpha})`;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y - rad * 2.0);
+          ctx.lineTo(p.x + rad * 0.5, p.y - rad * 0.5);
+          ctx.lineTo(p.x + rad * 2.0, p.y);
+          ctx.lineTo(p.x + rad * 0.5, p.y + rad * 0.5);
+          ctx.lineTo(p.x, p.y + rad * 2.0);
+          ctx.lineTo(p.x - rad * 0.5, p.y + rad * 0.5);
+          ctx.lineTo(p.x - rad * 2.0, p.y);
+          ctx.lineTo(p.x - rad * 0.5, p.y - rad * 0.5);
+          ctx.closePath();
+          ctx.fill();
+
+          // Tiny center core (bright white)
+          ctx.fillStyle = `rgba(255, 255, 255, ${curAlpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, rad * 0.5, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Draw a soft glowing gold circle
+          const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rad * 2.2);
+          grd.addColorStop(0, `rgba(255, 255, 255, ${curAlpha})`);
+          grd.addColorStop(0.25, `hsla(${p.hue}, 100%, 72%, ${curAlpha})`);
+          grd.addColorStop(0.7, `hsla(${p.hue}, 100%, 48%, ${curAlpha * 0.25})`);
+          grd.addColorStop(1, `hsla(${p.hue}, 100%, 40%, 0)`);
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, rad * 2.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     }
 
@@ -592,8 +623,60 @@ function App() {
     // Attach Event Listeners
     window.addEventListener('resize', resize);
 
-    const onMouseMove = (e) => { mouseX = e.clientX; mouseY = e.clientY; };
-    const onMouseLeave = () => { mouseX = -9999; mouseY = -9999; };
+    const onMouseMove = (e) => {
+      // If mouse is hovering over the UI panel, don't spawn particles or repel
+      const ui = document.getElementById('pw-ui');
+      if (ui && ui.contains(e.target)) {
+        mouseX = -9999;
+        mouseY = -9999;
+        lastMouseX = -9999;
+        lastMouseY = -9999;
+        return;
+      }
+
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+
+      let dx = 0;
+      let dy = 0;
+      if (lastMouseX > -9000) {
+        dx = clientX - lastMouseX;
+        dy = clientY - lastMouseY;
+      }
+      lastMouseX = clientX;
+      lastMouseY = clientY;
+
+      mouseX = clientX;
+      mouseY = clientY;
+
+      // Spawn 12-20 dense shimmering golden stardust particles
+      const spawnCount = 12 + Math.floor(Math.random() * 9);
+      for (let s = 0; s < spawnCount; s++) {
+        if (trail.length >= TRAIL_MAX) trail.shift();
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 0.2 + Math.random() * 1.1;
+        // 55 to 115 frames duration (much longer disappearance time)
+        const life = 55 + Math.floor(Math.random() * 60);
+        trail.push({
+          x: mouseX + (Math.random() - 0.5) * 8,
+          y: mouseY + (Math.random() - 0.5) * 8,
+          vx: dx * 0.12 + Math.cos(angle) * speed,
+          vy: dy * 0.12 + Math.sin(angle) * speed,
+          life,
+          maxLife: life,
+          size: 0.45 + Math.random() * 0.85, // smaller width/size for tiny stardust
+          hue: 38 + Math.random() * 18,      // gold to amber range
+          phase: Math.random() * Math.PI * 2,
+          isStar: Math.random() > 0.45
+        });
+      }
+    };
+    const onMouseLeave = () => {
+      mouseX = -9999;
+      mouseY = -9999;
+      lastMouseX = -9999;
+      lastMouseY = -9999;
+    };
     const onDblClick = () => { resetToSphere(); };
 
     canvas.addEventListener('mousemove', onMouseMove);
@@ -719,13 +802,7 @@ function App() {
   };
 
   return (
-    <div className={isDarkMode ? 'dark-theme' : 'light-theme'} style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <button 
-        id="pw-theme-toggle" 
-        onClick={() => setIsDarkMode(!isDarkMode)}
-      >
-        Theme: {isDarkMode ? 'Dark' : 'Light'}
-      </button>
+    <div className='dark-theme' style={{ position: 'relative', width: '100%', height: '100%' }}>
 
       <canvas id="pw-canvas" ref={canvasRef}></canvas>
 

@@ -12,6 +12,7 @@ body {
     width: 100vw;
     touch-action: none;
     transition: background 0.3s ease;
+    cursor: none;
 }
 
 body.light-theme {
@@ -24,6 +25,7 @@ body.light-theme {
     width: 100%;
     height: 100%;
     touch-action: none;
+    cursor: none;
 }
 
 #pw-ui {
@@ -38,6 +40,19 @@ body.light-theme {
     z-index: 10;
     width: calc(100vw - 32px);
     max-width: 480px;
+    cursor: default !important;
+}
+
+#pw-ui * {
+    cursor: default !important;
+}
+
+#pw-input {
+    cursor: text !important;
+}
+
+#pw-btn, #pw-go {
+    cursor: pointer !important;
 }
 
 /* Theme Toggle Button */
